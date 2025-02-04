@@ -1,0 +1,1 @@
+export const DELAY_MOCK = 1000;
