@@ -10,7 +10,7 @@ export const getUsers = async (
     setTimeout(() => {
       let data = usersData.data as User[];
       // FILTER DATA
-      const { page, elementsPerPage, sortBy, sortOrder, keyword } = filters;
+      const { sortBy, sortOrder, keyword } = filters;
       if (keyword) {
         data = data.filter((user: User) => {
           return user.name.toLowerCase().includes(keyword.toLowerCase());
@@ -28,12 +28,17 @@ export const getUsers = async (
           return 0;
         });
       }
+
+      // PAGINATE DATA
+      const page = filters?.page || 1;
+      const elementsTotal = data.length;
+      const elementsPerPage = filters?.elementsPerPage || 10;
       data = data.slice((page - 1) * elementsPerPage, page * elementsPerPage);
 
       resolve({
         ok: true,
         data: {
-          elementsTotal: data.length,
+          elementsTotal,
           data,
         },
       });
