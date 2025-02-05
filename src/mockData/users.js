@@ -1,11 +1,4 @@
-import { User } from "@/models/user";
-
-interface UserList {
-  elementsTotal: number;
-  data: User[];
-}
-
-const userData: UserList = {
+export default {
   elementsTotal: 146,
   data: [
     {
@@ -886,5 +879,3 @@ const userData: UserList = {
     },
   ],
 };
-
-export default userData;

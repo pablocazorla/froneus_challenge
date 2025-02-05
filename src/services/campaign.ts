@@ -1,15 +1,18 @@
 import { DELAY_MOCK } from "@/mockData/config";
 import campaingsData from "@/mockData/campaings";
-import { CampaignList, Campaign } from "@/models/campaign";
-import { FilterCampaign } from "@/models/filters";
+import { type CampaignList, type Campaign } from "@/models/campaign";
+import { type User } from "@/models/user";
+import { type ApiError } from "@/models/apiError";
+import { type FiltersType } from "../models/filters";
 
-export const getCampaigns = async (filters: FilterCampaign): Promise<{ ok: boolean; data: CampaignList }> => {
+export const getCampaigns = async (
+  filters: FiltersType
+): Promise<{ ok: boolean; data: CampaignList }> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-
-      let data = campaingsData.data;
+      let data = campaingsData.data as Campaign[];
       // FILTER DATA
-      const { page, elementsPerPage, sortBy, sortOrder, keyword } = filters;
+      const { sortBy, sortOrder, keyword } = filters;
       if (keyword) {
         data = data.filter((campaign: Campaign) => {
           return campaign.name.toLowerCase().includes(keyword.toLowerCase());
@@ -24,39 +27,59 @@ export const getCampaigns = async (filters: FilterCampaign): Promise<{ ok: boole
               return b.name.localeCompare(a.name);
             }
           }
+          if (sortBy === "start_at") {
+            if (sortOrder === "desc") {
+              return a.start_at.localeCompare(b.start_at);
+            } else {
+              return b.start_at.localeCompare(a.start_at);
+            }
+          }
+          if (sortBy === "status") {
+            if (sortOrder === "asc") {
+              return a.status.localeCompare(b.status);
+            } else {
+              return b.status.localeCompare(a.status);
+            }
+          }
           return 0;
         });
       }
+
+      const page = filters?.page || 1;
+      const elementsPerPage = filters?.elementsPerPage || 10;
+      const elementsTotal = data.length;
       data = data.slice((page - 1) * elementsPerPage, page * elementsPerPage);
 
       resolve({
         ok: true,
         data: {
-          elementsTotal: data.length,
+          elementsTotal,
           data: data.map((campaign: Campaign) => {
+            const users = campaign.users as User[];
             return {
               ...campaign,
-              users: campaign.users.length,
+              users: users.length,
             };
           }),
-        }
+        },
       });
     }, DELAY_MOCK);
   });
 };
 
-export const getCampaign = async (id: string): Promise<{ ok: boolean; data?: Campaign; message?: string }> => {
+export const getCampaign = async (
+  id: string
+): Promise<{ ok: boolean; data: Campaign } | ApiError> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-
       if (!id) {
         reject({
           ok: false,
           message: "Error. No se encuentra la campaña.",
         });
       }
-
-      const data = campaingsData.data.filter((campaign: Campaign) => {
+      const campaingsList = campaingsData.data as Campaign[];
+      const data = campaingsList.filter((campaign: Campaign) => {
         return campaign.id === id;
       });
 
@@ -75,7 +98,9 @@ export const getCampaign = async (id: string): Promise<{ ok: boolean; data?: Cam
   });
 };
 
-export const createCampaign = async (campaign: Campaign): Promise<{ ok: boolean; data?: Campaign; message?: string }> => {
+export const createCampaign = async (
+  campaign: Campaign
+): Promise<{ ok: boolean; data: Campaign } | ApiError> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (campaign && campaign.id) {
@@ -93,7 +118,9 @@ export const createCampaign = async (campaign: Campaign): Promise<{ ok: boolean;
   });
 };
 
-export const updateCampaign = async (campaign: Campaign): Promise<{ ok: boolean; data?: Campaign; message?: string }> => {
+export const updateCampaign = async (
+  campaign: Campaign
+): Promise<{ ok: boolean; data: Campaign } | ApiError> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (campaign) {
@@ -111,18 +138,19 @@ export const updateCampaign = async (campaign: Campaign): Promise<{ ok: boolean;
   });
 };
 
-export const deleteCampaign = async (id: string): Promise<{ ok: boolean; data?: Campaign; message?: string }> => {
+export const deleteCampaign = async (
+  id: string
+): Promise<{ ok: boolean; data: Campaign } | ApiError> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-
       if (!id) {
         reject({
           ok: false,
           message: "Error. No se encuentra la campaña",
         });
       }
-
-      const data = campaingsData.data.filter((campaign: Campaign) => {
+      const campaingsList = campaingsData.data as Campaign[];
+      const data = campaingsList.filter((campaign: Campaign) => {
         return campaign.id === id;
       });
 

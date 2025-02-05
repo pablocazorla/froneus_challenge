@@ -3,11 +3,12 @@ import usersData from "@/mockData/users";
 import { UserList, User } from "@/models/user";
 import { FilterUser } from "@/models/filters";
 
-export const getUsers = async (filters: FilterUser): Promise<{ ok: boolean; data: UserList }> => {
+export const getUsers = async (
+  filters: FilterUser
+): Promise<{ ok: boolean; data: UserList }> => {
   return new Promise((resolve) => {
     setTimeout(() => {
-
-      let data = usersData.data;
+      let data = usersData.data as User[];
       // FILTER DATA
       const { page, elementsPerPage, sortBy, sortOrder, keyword } = filters;
       if (keyword) {
@@ -33,25 +34,26 @@ export const getUsers = async (filters: FilterUser): Promise<{ ok: boolean; data
         ok: true,
         data: {
           elementsTotal: data.length,
-          data
-        }
+          data,
+        },
       });
     }, DELAY_MOCK);
   });
 };
 
-export const getUser = async (id: string): Promise<{ ok: boolean; data?: User; message?: string }> => {
+export const getUser = async (
+  id: string
+): Promise<{ ok: boolean; data?: User; message?: string }> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-
       if (!id) {
         reject({
           ok: false,
           message: "Error. No se encuentra el usuario.",
         });
       }
-
-      const data = usersData.data.filter((user: User) => {
+      const userList = usersData.data as User[];
+      const data = userList.filter((user: User) => {
         return user.id === id;
       });
 
@@ -70,7 +72,9 @@ export const getUser = async (id: string): Promise<{ ok: boolean; data?: User; m
   });
 };
 
-export const createUser = async (user: User): Promise<{ ok: boolean; data?: User; message?: string }> => {
+export const createUser = async (
+  user: User
+): Promise<{ ok: boolean; data?: User; message?: string }> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (user && user.id) {
@@ -88,7 +92,9 @@ export const createUser = async (user: User): Promise<{ ok: boolean; data?: User
   });
 };
 
-export const updateUser = async (user: User): Promise<{ ok: boolean; data?: User; message?: string }> => {
+export const updateUser = async (
+  user: User
+): Promise<{ ok: boolean; data?: User; message?: string }> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (user) {
@@ -106,18 +112,19 @@ export const updateUser = async (user: User): Promise<{ ok: boolean; data?: User
   });
 };
 
-export const deleteUser = async (id: string): Promise<{ ok: boolean; data?: User; message?: string }> => {
+export const deleteUser = async (
+  id: string
+): Promise<{ ok: boolean; data?: User; message?: string }> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-
       if (!id) {
         reject({
           ok: false,
           message: "Error. No se encuentra el usuario.",
         });
       }
-
-      const data = usersData.data.filter((user: User) => {
+      const userList = usersData.data as User[];
+      const data = userList.filter((user: User) => {
         return user.id === id;
       });
 

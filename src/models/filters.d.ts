@@ -1,16 +1,17 @@
-export interface FilterCampaign {
-  page: number;
-  elementsPerPage: number;
+export interface FiltersType {
+  [index: string]: string | number | undefined;
+  page?: number;
+  elementsPerPage?: number;
   sortBy?: string;
-  sortOrder?: string;
+  sortOrder?: "asc" | "desc";
   keyword?: string;
 }
 
 export interface FilterUser {
-  page: number;
-  elementsPerPage: number;
+  [index: string]: string | number | undefined;
+  page?: number;
+  elementsPerPage?: number;
   sortBy?: string;
-  sortOrder?: string;
+  sortOrder?: "asc" | "desc";
   keyword?: string;
 }
-

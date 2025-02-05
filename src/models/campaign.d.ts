@@ -1,8 +1,6 @@
-import { User } from '@/models/user'
+import { User } from "@/models/user";
 
 export type Status = "actived" | "ended" | "on_hold";
-
-
 
 export interface Campaign {
   id: string;
@@ -11,22 +9,10 @@ export interface Campaign {
   start_at: string;
   record_calls: boolean;
   status: Status;
-  users: User[];
+  users: User[] | number;
 }
-
-export interface CampaignInList {
-  id: string;
-  name: string;
-  created_at: string;
-  start_at: string;
-  record_calls: boolean;
-  status: Status;
-  users: number;
-}
-
-
 
 export interface CampaignList {
   elementsTotal: number;
-  data: CampaignInList[];
+  data: Campaign[];
 }

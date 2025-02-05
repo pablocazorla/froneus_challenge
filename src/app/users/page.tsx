@@ -1,9 +1,9 @@
 import Container from "@/components/ui/container";
 
-export default function Home() {
+export default function UsersPage() {
   return (
     <div className="">
-      <Container>Inicio</Container>
+      <Container>UsersPage</Container>
     </div>
   );
 }
