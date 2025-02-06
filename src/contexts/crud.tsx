@@ -23,21 +23,29 @@ type showToastInput = {
 interface CRUDContext {
   filters: FiltersType;
   setFilters: (filters: FiltersType) => void;
-  selectedCampaignId: string | null;
-  setSelectedCampaignId: (id: string | null) => void;
+  selectedId: string | null;
+  setSelectedId: (id: string | null) => void;
   isLoading: boolean;
   setIsLoading: (isLoading: boolean) => void;
   showToast: (obj: showToastInput) => void;
+  reloadFlag: number;
+  forceReload: () => void;
+  editorOpen: boolean;
+  setEditorOpen: (editorOpen: boolean) => void;
 }
 
 export const CRUDContext = createContext<CRUDContext>({
   filters: { ...defaultFilters },
   setFilters: () => {},
-  selectedCampaignId: null,
-  setSelectedCampaignId: () => {},
+  selectedId: null,
+  setSelectedId: () => {},
   isLoading: false,
   setIsLoading: () => {},
   showToast: () => {},
+  reloadFlag: 0,
+  forceReload: () => {},
+  editorOpen: false,
+  setEditorOpen: () => {},
 });
 
 const CRUDProvider = ({ children }: { children: React.ReactNode }) => {
@@ -60,9 +68,7 @@ const CRUDProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(
-    null
-  );
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const toast = useRef<Toast>(null);
 
@@ -76,16 +82,28 @@ const CRUDProvider = ({ children }: { children: React.ReactNode }) => {
     []
   );
 
+  const [reloadFlag, setReloadFlag] = useState<number>(0);
+
+  const forceReload = useCallback(() => {
+    setReloadFlag(new Date().valueOf());
+  }, []);
+
+  const [editorOpen, setEditorOpen] = useState<boolean>(false);
+
   return (
     <CRUDContext.Provider
       value={{
         filters,
         setFilters,
-        selectedCampaignId,
-        setSelectedCampaignId,
+        selectedId,
+        setSelectedId,
         isLoading,
         setIsLoading,
         showToast,
+        reloadFlag,
+        forceReload,
+        editorOpen,
+        setEditorOpen,
       }}
     >
       {children}

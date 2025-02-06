@@ -1,66 +1,51 @@
 "use client";
-import { type Status } from "@/models/campaign";
+
 import Card from "@/components/ui/card";
 import Table from "@/components/ui/table";
+import TableSearch from "@/components/ui/table/filters/search";
 import Paginator from "@/components/ui/paginator";
 import LoadingBox from "@/components/ui/loadingBox";
-import BooleanTag from "@/components/ui/booleanTag";
-import StatusCampaignTag from "@/components/ui/statusCampaignTag";
 import useCampaignDashboard from "./useCampaignDashboard";
-import formatDatetime from "@/utils/formatDatetime";
-
-const columns = [
-  {
-    field: "name",
-    header: "Nombre",
-    sortable: true,
-  },
-  {
-    field: "created_at",
-    header: "Fecha de creación",
-    body: ({ created_at }: { created_at: string }) => {
-      return formatDatetime(created_at);
-    },
-  },
-  {
-    field: "start_at",
-    header: "Fecha de lanzamiento",
-
-    body: ({ start_at }: { start_at: string }) => {
-      return formatDatetime(start_at);
-    },
-    sortable: true,
-  },
-  {
-    field: "record_calls",
-    header: "Grabable",
-    body: ({ record_calls }: { record_calls: boolean }) => {
-      return <BooleanTag value={record_calls} />;
-    },
-  },
-  {
-    field: "status",
-    header: "Estado",
-    body: ({ status }: { status: Status }) => {
-      return <StatusCampaignTag status={status} />;
-    },
-    sortable: true,
-  },
-  {
-    field: "users",
-    header: "Cantidad de usuarios",
-  },
-];
+import { Button } from "primereact/button";
+import tableColumns from "./tableColumns";
 
 const CampaignDashboard = () => {
-  const { data, isLoading } = useCampaignDashboard();
+  const {
+    data,
+    isLoading,
+    openConfirmFinish,
+    openConfirmDelete,
+    openCampaign,
+  } = useCampaignDashboard();
 
   return (
     <Card>
-      <header className="p-3">Header</header>
-      <Table columns={columns} data={data.data} />
-      <Paginator elementsTotal={data.elementsTotal} />
-      <LoadingBox loading={isLoading} />
+      <header className="p-3 flex items-center justify-between gap-3">
+        <TableSearch />
+        <Button
+          //label={}
+          //icon="pi pi-plus"
+          onClick={() => openCampaign(null)}
+          aria-label="Nueva campaña"
+          title="Nueva campaña"
+          className="flex items-center gap-2"
+        >
+          <span className="pi pi-plus"></span>
+          <span className="hidden sm:inline">Nueva campaña</span>
+        </Button>
+      </header>
+      <div className="relative">
+        <Table
+          columns={tableColumns(
+            openConfirmFinish,
+            openConfirmDelete,
+            openCampaign
+          )}
+          data={data.data}
+        />
+        <Paginator elementsTotal={data.elementsTotal} />
+        <LoadingBox loading={isLoading} />
+      </div>
     </Card>
   );
 };

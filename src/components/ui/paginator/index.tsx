@@ -13,7 +13,8 @@ const Paginator = ({ elementsTotal }: { elementsTotal: number }) => {
   const elementsPerPage = filters?.elementsPerPage || DEFAULT_ELEMENTS_PER_PAGE;
 
   return (
-    <div className="py-2">
+    <div className="flex md:justify-between justify-center items-center py-2">
+      <div className="px-4 md:block hidden text-sm">{`${elementsTotal} elementos en total`}</div>
       <PaginatorCompPrime
         first={(page - 1) * elementsPerPage}
         rows={elementsPerPage}

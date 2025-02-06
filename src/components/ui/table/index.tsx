@@ -18,6 +18,10 @@ interface TableProps {
   data: any[];
 }
 
+const NoResultsMessage = () => {
+  return <div className="text-center italic">Sin resultados.</div>;
+};
+
 const Table = ({ columns, data }: TableProps) => {
   const { filters, setFilters } = useContext(CRUDContext);
 
@@ -25,7 +29,7 @@ const Table = ({ columns, data }: TableProps) => {
     <DataTable
       value={data}
       tableStyle={{ minWidth: "50rem" }}
-      //removableSort
+      emptyMessage={NoResultsMessage}
       sortField={filters?.sortBy}
       sortOrder={!filters?.sortOrder ? 0 : filters.sortOrder === "asc" ? 1 : -1}
       onSort={(e) => {

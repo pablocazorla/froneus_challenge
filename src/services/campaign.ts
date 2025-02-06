@@ -1,6 +1,10 @@
 import { DELAY_MOCK } from "@/mockData/config";
 import campaingsData from "@/mockData/campaings";
-import { type CampaignList, type Campaign } from "@/models/campaign";
+import {
+  type CampaignList,
+  type Campaign,
+  type Status,
+} from "@/models/campaign";
 import { type User } from "@/models/user";
 import { type ApiError } from "@/models/apiError";
 import { type FiltersType } from "../models/filters";
@@ -68,14 +72,14 @@ export const getCampaigns = async (
 };
 
 export const getCampaign = async (
-  id: string
+  id: string | null
 ): Promise<{ ok: boolean; data: Campaign } | ApiError> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       if (!id) {
-        reject({
+        resolve({
           ok: false,
-          message: "Error. No se encuentra la campaña.",
+          message: "Error. Debe especificar el id de la campaña.",
         });
       }
       const campaingsList = campaingsData.data as Campaign[];
@@ -89,7 +93,7 @@ export const getCampaign = async (
           data: data[0],
         });
       } else {
-        reject({
+        resolve({
           ok: false,
           message: "Error. No se encuentra la campaña.",
         });
@@ -101,7 +105,7 @@ export const getCampaign = async (
 export const createCampaign = async (
   campaign: Campaign
 ): Promise<{ ok: boolean; data: Campaign } | ApiError> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       if (campaign && campaign.id) {
         resolve({
@@ -109,7 +113,7 @@ export const createCampaign = async (
           data: campaign,
         });
       } else {
-        reject({
+        resolve({
           ok: false,
           message: "Error al crear nueva campaña.",
         });
@@ -121,7 +125,7 @@ export const createCampaign = async (
 export const updateCampaign = async (
   campaign: Campaign
 ): Promise<{ ok: boolean; data: Campaign } | ApiError> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       if (campaign) {
         resolve({
@@ -129,7 +133,7 @@ export const updateCampaign = async (
           data: campaign,
         });
       } else {
-        reject({
+        resolve({
           ok: false,
           message: "Error al actualizar campaña.",
         });
@@ -138,15 +142,36 @@ export const updateCampaign = async (
   });
 };
 
+export const finishCampaign = async (
+  id: string | null,
+  status: Status
+): Promise<{ ok: boolean; data: Status } | ApiError> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      if (status) {
+        resolve({
+          ok: true,
+          data: status,
+        });
+      } else {
+        resolve({
+          ok: false,
+          message: "Error al actualizar status de campaña.",
+        });
+      }
+    }, DELAY_MOCK);
+  });
+};
+
 export const deleteCampaign = async (
-  id: string
+  id: string | null
 ): Promise<{ ok: boolean; data: Campaign } | ApiError> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       if (!id) {
-        reject({
+        resolve({
           ok: false,
-          message: "Error. No se encuentra la campaña",
+          message: "Error. Debe especificar el id de la campaña.",
         });
       }
       const campaingsList = campaingsData.data as Campaign[];
@@ -160,7 +185,7 @@ export const deleteCampaign = async (
           message: "Campaña eliminada correctamente.",
         });
       } else {
-        reject({
+        resolve({
           ok: false,
           message: "Error. No se encuentra la campaña.",
         });
